@@ -55,3 +55,35 @@ We will utilize the Agile framework for this project because of its flexibility 
 ## Collaboration Tool
 
 Our primary collaboration tool will be Slack. 
+
+
+# Milestone 2
+
+## Project Management Tool
+
+We will be using Trello as our project management tool.
+
+## Requirements
+
+#### User Requirements
+
+- As a user, I want to be able to see how popular a key word is to track social media exposure. 
+- As a user, I would like to be able to track how popular a key word is over time in order to track growth and exposure over time.
+- As a user, I would like to compare my keyword to other companies in order to track my exposure compared to my competition.
+
+#### Functional Requirements
+
+- The system must be able to allow a user to log in and manage a profile.
+- The system must be able to connect to the twitter API and parse information. 
+- The system must be able to display the parsed information in a user friendly manner. 
+
+#### Non-Functional Requirements
+
+- The system must be written in a scalable manner. 
+- The system must be secure.
+- The system must have an intuitive and easy to use interface.
+
+
+## Snapshot of Sprint 1 Planning
+
+![Sprint 1 Planning](https://www.dropbox.com/s/9ar2xp2v2s62mpf/Sprint1.png?dl=1)
