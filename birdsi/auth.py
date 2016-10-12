@@ -5,6 +5,7 @@
 #
 
 import bcrypt
+import re
 
 class User():
 	"""
@@ -43,12 +44,25 @@ class UserManager:
 
 			# Ready to store in DB
 			
+
 		return False
 
 	def valid_email(email, email_repeat):
-		pass
+		# Checks if emails match and for regex match
+		if email == email_repeat \
+		and re.match("^[a-zA-Z0-9.-]+@[a-zA-Z0-9.]+\\.[a-zA-Z0-9]+$", email):
+			return True
+		
+		return False			
 
 	def valid_password(password, password_repeat):
-		pass
+		# Checks if passwords match, longer than 6 chars, contains uppercase 
+		# and lower case letter, a number, and a special character/number
+		if password == password_repeat \
+		and len(password) > 6 \
+		and re.match("[a-z]", password) \
+		and re.match("[A-Z]", password) \
+		and re.match(r"[0-9!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]", password):
+			return True
 
-
+		return False 
