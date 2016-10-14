@@ -7,23 +7,6 @@
 import bcrypt
 import re
 
-class User():
-	"""
-	Definition of a User
-	
-	Accepted kwargs:
-	- uid (userid)
-	- email
-	- name (company name)
-	- password (unhashed)
-	"""
-	def __init__(self, **kwargs):
-		for attr, value in kwargs:
-			self.__setattr__(attr, value)
-
-	
-
-
 class UserManager:
 	"""Handles user registration, and authentication"""
 
