@@ -46,7 +46,13 @@ class UserManager:
 			hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
 
 			# Ready to store in DB
+			query_db('INSERT INTO users (email, name, password) VALUES (?,, ? ?)' \
+				[email, name, hashed_password])
+			db.commit()
 			
+			session['uid'] = user['uid']
+
+			return True
 		return False
 
 	def login(email, password):
@@ -63,7 +69,7 @@ class UserManager:
 			bcrypt.hashpw(password, user['password']) == user['password']:
 			
 			# User's credentials match, can set session and return True
-			Session['name'] = user['name'];
+			session['uid'] = user['uid']
 			return True
 
 		return False
