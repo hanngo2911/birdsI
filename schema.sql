@@ -4,7 +4,7 @@ drop table if exists users;
     username text not null,
     email text not null,
     password text not null,
-    admin int 0 
+    admin integer
 );
 
 
