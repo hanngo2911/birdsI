@@ -4,10 +4,11 @@
 <head>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css') }}">
 </head>
-    
-  <div class="imgcontainer">
-    <img src="{{ url_for('static', filename='BirdsILogo.png') }}" alt="BirdsILogo" class="avatar">
-  </div>
+<body>
+<div class="imgcontainer">
+  <img src="{{ url_for('static', filename='BirdsILogo.png') }}" alt="BirdsILogo" class="avatar">
+</div>
+<h1>Login to BirdsI</h1>
 <form action="{{ url_for('login') }}" method="post">
 
 {% if error %}<p>{{ error }}</p> {% endif %}
@@ -32,5 +33,5 @@
   -->
 
 </form>
-    
+</body>   
 </html>
