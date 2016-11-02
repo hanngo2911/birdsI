@@ -6,10 +6,12 @@
 
 import bcrypt
 import re
+import db
 
 class UserManager:
 	"""Handles user registration, and authentication"""
 
+	@staticmethod
 	def valid_email(email, email_repeat):
 		# Checks if emails match and for regex match
 		if email == email_repeat \
@@ -18,6 +20,7 @@ class UserManager:
 		
 		return False			
 
+	@staticmethod
 	def valid_password(password, password_repeat):
 		# Checks if passwords match, longer than 6 chars, contains uppercase 
 		# and lower case letter, a number, and a special character/number
@@ -30,7 +33,8 @@ class UserManager:
 
 		return False 
 		
-	def register(name, email, email_repeat, password, password_repeat):
+	@staticmethod
+	def register(username, email, email_repeat, password, password_repeat):
 		# This method requires the user to enter email and password twice
 		# to ensure correctness. 
 		#
@@ -42,26 +46,25 @@ class UserManager:
 			and valid_password(password, password_repeat) \
 			and name:
 			# Email valid, password valid, name exists, good to go
-			password_bytes = password.tobytes()
-			hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
+			password_hex_bytes = password.tobytes()
+			hashed_password = bcrypt.hashpw(password_hex_bytes, bcrypt.gensalt())
 
 			# Ready to store in DB
-			query_db('INSERT INTO users (email, name, password) VALUES (?,, ? ?)' \
-				[email, name, hashed_password])
-			db.commit()
-			
-			session['uid'] = user['uid']
+			db.insertUser(email, username, hashed_password)
+			user = db.retrieveUser(email)
+			if user:
+				session['id'] = user['id']
+				return True
 
-			return True
 		return False
 
+	@staticmethod
 	def login(email, password):
 		# Returns True if successful, False if not
 		# 
 
 		# Query DB for user attempting to log in
-		user = query_db('SELECT * FROM users WHERE email = ?',	
-			[email], one=True)
+		user = db.retrieveUser(email)
 		
 		# Need to check if user is returned (email exists) and password
 		# matches the one stored for that user
@@ -74,6 +77,7 @@ class UserManager:
 
 		return False
 
+	@staticmethod
 	def logout():
 		if 'name' in session:
 			session.pop('name', None)
