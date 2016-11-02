@@ -8,8 +8,8 @@ import sqlite3 as sql
 def insertUser(email, username,hashed_password):
     con = sql.connect("birdsi.db")
     cur = con.cursor()
-    cur.execute("INSERT INTO users (username,email, password) VALUES (?,?,?)", \
-        (username,email,hashed_password))
+    cur.execute("INSERT INTO users (username,email, password, admin) VALUES (?,?,?,?)", \
+        (username,email,hashed_password, 0))
     con.commit()
     con.close()
 

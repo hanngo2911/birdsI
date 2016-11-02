@@ -18,8 +18,8 @@ app.config.update(dict(
 ### Routing ### 
 @app.route('/')
 def index():
-	if session.get('uid'):
-		return 'Hello, World!'
+	if session.get('id'):
+		return 'Logged in, dashboard here'
 
 	return redirect(url_for('login'))
 
@@ -30,7 +30,10 @@ def login():
 		# User has submitted the login form
 		email = request.form['email']
 		password = request.form['password']
-		if UserManager.login(email, password):
+		user = UserManager.login(email, password)
+		if user:
+			# first element in tuple is id
+			session['id'] = user[0]
 			return redirect(url_for('index'))
 		# Authentication Failed
 		error = "Invalid email or password"
@@ -44,23 +47,31 @@ def register():
 	error = None;
 	if request.method == 'POST':
 		# User has submitted the registration form
-		name = request.form['name']
+		username = request.form['username']
 		email = request.form['email']
 		email_repeat = request.form['email_repeat']
 		password = request.form['password']
 		password_repeat = request.form['password_repeat']
-		if UserManager.register(name, email, email_repeat, password,
-			password_repeat):
+
+		user = UserManager.register(username, email, email_repeat, password,
+			password_repeat)
+		if user:
+			session['id'] = user[0]
 			return redirect(url_for('index'))
 
 		# Registration Failed
 		error = "Registration failed, please try again"
-		return render_template('registration.html', error = error)
+		return render_template('register.html', error = error)
 
 	# User is visiting the registration page, and has not submitted
-	return render_template('registration.html', error = error)
+	return render_template('register.html', error = error)
 
 		
+@app.route('/logout')
+def logout():
+	session.pop('id', None)
+	return redirect(url_for('login'))
+
 
 
 if __name__ == '__main__':

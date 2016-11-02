@@ -23,12 +23,13 @@ class UserManager:
 	@staticmethod
 	def valid_password(password, password_repeat):
 		# Checks if passwords match, longer than 6 chars, contains uppercase 
-		# and lower case letter, a number, and a special character/number
-		if password == password_repeat \
-			and len(password) > 6 \
-			and re.match("[a-z]", password) \
-			and re.match("[A-Z]", password) \
-			and re.match(r"[0-9!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]", password):
+		# and lower case letter, and a number
+		if password == password_repeat:
+			# Commenting out password validation, will work on in second sprint
+			# and len(password) > 6 \
+			# and re.match("[a-z]", password) \
+			# and re.match("[A-Z]", password) \
+			# and re.match("[0-9]", password):
 			return True
 
 		return False 
@@ -38,25 +39,24 @@ class UserManager:
 		# This method requires the user to enter email and password twice
 		# to ensure correctness. 
 		#
-		# Returns True if successful, False otherwise
+		# Returns user if successful, None otherwise
 		# 
 		# Currently, no validation email is being sent to the given email
 		
-		if valid_email(email, email_repeat) \
-			and valid_password(password, password_repeat) \
-			and name:
+		if UserManager.valid_email(email, email_repeat) \
+			and UserManager.valid_password(password, password_repeat) \
+			and username:
 			# Email valid, password valid, name exists, good to go
-			password_hex_bytes = password.tobytes()
+			password_hex_bytes = password.encode('utf-8')
 			hashed_password = bcrypt.hashpw(password_hex_bytes, bcrypt.gensalt())
 
 			# Ready to store in DB
 			db.insertUser(email, username, hashed_password)
 			user = db.retrieveUser(email)
 			if user:
-				session['id'] = user['id']
-				return True
+				return user
 
-		return False
+		return None
 
 	@staticmethod
 	def login(email, password):
@@ -68,17 +68,12 @@ class UserManager:
 		
 		# Need to check if user is returned (email exists) and password
 		# matches the one stored for that user
-		if user is not None and \
-			bcrypt.hashpw(password, user['password']) == user['password']:
-			
-			# User's credentials match, can set session and return True
-			session['uid'] = user['uid']
-			return True
+		password_hex_bytes = password.encode('utf-8')
+		if user is not None:
 
-		return False
+			retrieved_password = user[3].encode('utf-8')
+			if bcrypt.hashpw(password_hex_bytes, retrieved_password) == retrieved_password:
+			# password is 4th element in tuple
+				return user
 
-	@staticmethod
-	def logout():
-		if 'name' in session:
-			session.pop('name', None)
-			
+		return None			
